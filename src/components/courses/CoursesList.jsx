@@ -1,39 +1,43 @@
 import React from "react";
-import { connect } from "react-redux";
-import * as courseActions from "../../redux/actions/courseActions";
 import PropTypes from "prop-types";
-import { bindActionCreators } from "redux";
+import { Link } from "react-router-dom";
 
-class CoursesList extends React.Component {
-  componentDidMount() {
-    this.props.actions.loadCourse().catch((err) => {
-      alert("Loading Course is failed " + err);
-    });
-  }
-  render() {
-    return (
-      <div>
-        {this.props.courses.map((course) => (
-          <div key={course.title}>{course.title}</div>
-        ))}
-      </div>
-    );
-  }
-}
-CoursesList.propTypes = {
-  courses: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired,
+const CourseList = ({ courses }) => (
+  <table className="table">
+    <thead>
+      <tr>
+        <th />
+        <th>Title</th>
+        <th>Author</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+      {courses.map(course => {
+        return (
+          <tr key={course.id}>
+            <td>
+              <a
+                className="btn btn-light"
+                href={"http://pluralsight.com/courses/" + course.slug}
+              >
+                Watch
+              </a>
+            </td>
+            <td>
+              <Link to={"/course/" + course.slug}>{course.title}</Link>
+            </td>
+            <td>{course.authorId}</td>
+            <td>{course.category}</td>
+          </tr>
+        );
+      })}
+    </tbody>
+  </table>
+);
+
+CourseList.propTypes = {
+  courses: PropTypes.array.isRequired
 };
-function mapStateToProps(state) {
-  return {
-    courses: state.courses,
-  };
-}
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(courseActions, dispatch),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CoursesList);
+export default CourseList;

@@ -1,8 +1,10 @@
 import React from "react";
-import { connect } from "react-redux";
+import CoursesList from './CoursesList.jsx';
 import * as courseActions from "../../redux/actions/courseActions";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { Redirect } from "react-router-dom";
 
 class CoursesPage extends React.Component {
   state = {
@@ -10,7 +12,11 @@ class CoursesPage extends React.Component {
       title: ""
     }
   };
-
+  componentDidMount(){
+    this.props.actions.loadCourse().catch(err => {
+      alert("Loading Course is failed "+ err);
+    })
+  }
   handleChange = event => {
     const course = { ...this.state.course, title: event.target.value };
     this.setState({ course });
@@ -23,20 +29,20 @@ class CoursesPage extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <>
+        {this.state.redirectToAddCoursePage && <Redirect to="/course" />}
         <h2>Courses</h2>
-        <h3>Add Course</h3>
-        <input
-          type="text"
-          onChange={this.handleChange}
-          value={this.state.course.title}
-        />
 
-        <input type="submit" value="Save" />
-        {this.props.courses.map(course => (
-          <div key={course.title}>{course.title}</div>
-        ))}
-      </form>
+        {/* <button
+          style={{ marginBottom: 20 }}
+          className="btn btn-primary add-course"
+          onClick={() => this.setState({ redirectToAddCoursePage: true })}
+        >
+          Add Course
+        </button> */}
+
+        <CoursesList courses={this.props.courses} />
+      </>
     );
   }
 }
