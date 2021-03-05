@@ -4,7 +4,7 @@ import { loadCourse, saveCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
 import CourseForm from "./CourseForm.jsx";
-import { newCourse } from "../../../tools/mockapi/mockData";
+import {  courses, newCourse } from "../../../tools/mockapi/mockData";
 // import Spinner from "../common/Spinner";
 // import { toast } from "react-toastify";
 
@@ -26,6 +26,9 @@ function ManageCoursePage({
       loadCourse().catch((error) => {
         alert("Loading courses failed" + error);
       });
+    }
+    else{
+      setCourse({...props.course})
     }
 
     if (authors.length === 0) {
@@ -87,10 +90,16 @@ ManageCoursePage.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
+function getCourseBySlug(courses,slug){
+  return courses.find(course => course.slug === slug) || null
+}
 
-function mapStateToProps(state) {
+function mapStateToProps(state,ownProps) {
+  // ownProps access the components props
+  const slug = ownProps.match.params.slug;
+  const course = slug && courses.length > 0 ? getCourseBySlug(state.courses,slug) : newCourse
   return {
-    course: newCourse,
+    course,
     courses: state.courses,
     authors: state.authors,
   };
