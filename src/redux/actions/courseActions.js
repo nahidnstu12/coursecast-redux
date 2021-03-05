@@ -16,8 +16,8 @@ export function updateCourseSuccess(course)
   return { type: actionTypes.UPDATE_COURSE_SUCCESS, course };
 }
 
-function loadCourseSuccess(course){
-  return { type: actionTypes.LOAD_COURSE, course}
+function loadCourseSuccess(courses){
+  return { type: actionTypes.LOAD_COURSE, courses}
 }
 
 export function loadCourse(){

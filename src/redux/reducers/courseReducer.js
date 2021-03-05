@@ -7,9 +7,13 @@ export default function  CourseReducer (state = initialState.courses, action)
     {
         case actionTypes.COURSE_CREATE:
             return [...state,{...action.course}];
-
+        
+        case actionTypes.COURSE_CREATE_SUCCESS:
+            return [...state,{...action.course}];
+        case actionTypes.UPDATE_COURSE_SUCCESS:
+            return ;
         case actionTypes.LOAD_COURSE:
-            return action.course;
+            return action.courses;
             
         default:
             return state;
