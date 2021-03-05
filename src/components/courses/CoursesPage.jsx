@@ -9,10 +9,9 @@ import { Redirect } from "react-router-dom";
 
 class CoursesPage extends React.Component {
   state = {
-    course: {
-      title: "",
-    },
+    redirectToAddCoursePage: false
   };
+  
   componentDidMount() {
     const { actions, authors, courses } = this.props;
     if (courses.length === 0) {
@@ -42,13 +41,13 @@ class CoursesPage extends React.Component {
         {this.state.redirectToAddCoursePage && <Redirect to="/course" />}
         <h2>Courses</h2>
 
-        {/* <button
+        <button
           style={{ marginBottom: 20 }}
           className="btn btn-primary add-course"
           onClick={() => this.setState({ redirectToAddCoursePage: true })}
         >
           Add Course
-        </button> */}
+        </button>
 
         <CoursesList
           courses={this.props.courses}
