@@ -1,5 +1,6 @@
 import * as actionTypes from '../types/actionTypes';
 import * as courseApi from '../../api/courseApi';
+import {beginApiCall} from './apiStatusAction'
 
 export function createCourse(course) 
 {
@@ -22,6 +23,7 @@ function loadCourseSuccess(courses){
 
 export function loadCourse(){
   return function (dispatch){
+    dispatch(beginApiCall())
     return courseApi.getCourses()
     .then(courses =>
       {
@@ -36,6 +38,7 @@ export function loadCourse(){
 export function saveCourse(course){
   return function (dispatch){
     //function (dispatch, getState) getState use for access redux store data
+    dispatch(beginApiCall())
     return courseApi
       .saveCourse(course)
       .then(savedCourse => {
