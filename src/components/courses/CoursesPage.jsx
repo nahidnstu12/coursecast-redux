@@ -71,7 +71,7 @@ CoursesPage.propTypes = {
   courses: PropTypes.array.isRequired,
   authors: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.number.isRequired,
 };
 
 function mapStateToProps(state) {
