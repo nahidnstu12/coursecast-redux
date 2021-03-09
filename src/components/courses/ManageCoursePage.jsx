@@ -5,8 +5,8 @@ import { loadAuthors } from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
 import CourseForm from "./CourseForm.jsx";
 import {  courses, newCourse } from "../../../tools/mockapi/mockData";
-// import Spinner from "../common/Spinner";
-// import { toast } from "react-toastify";
+import Spinner from "../common/Spinner";
+import { toast } from "react-toastify";
 
 function ManageCoursePage({
   courses,
@@ -18,8 +18,8 @@ function ManageCoursePage({
   ...props
 }) {
   const [course, setCourse] = useState({ ...props.course });
-  const [errors] = useState({});
-  // const [saving] = useState(false);
+  const [errors,setErrors] = useState({});
+  const [saving,setSaving] = useState(false);
 
   useEffect(() => {
     if (courses.length === 0) {
@@ -47,35 +47,47 @@ function ManageCoursePage({
   }
   function handleSave(event){
     event.preventDefault()
+    if(!formIsValid()) return;
+    
+    setSaving(true)
     saveCourse(course)
     .then(()=>{
+      toast.success("Course Saved.")
       history.push('/courses')
+    })
+    .catch(err => {
+      setSaving(false)
+      setErrors({onSave:err.message})
     })
   }
 
-  // function formIsValid() {
-  //   const { title, authorId, category } = course;
-  //   const errors = {};
+  function formIsValid() {
+    const { title, authorId, category } = course;
+    const errors = {};
 
-  //   if (!title) errors.title = "Title is required.";
-  //   if (!authorId) errors.author = "Author is required";
-  //   if (!category) errors.category = "Category is required";
+    if (!title) errors.title = "Title is required.";
+    if (!authorId) errors.author = "Author is required";
+    if (!category) errors.category = "Category is required";
 
-  //   setErrors(errors);
-  //   // Form is valid if the errors object still has no properties
-  //   return Object.keys(errors).length === 0;
-  // }
+    setErrors(errors);
+    // Form is valid if the errors object still has no properties
+    return Object.keys(errors).length === 0;
+  }
 
   return (
     <>
-    
-      <CourseForm
+      {courses.length === 0 || authors.length === 0 ? (
+      <Spinner /> )
+      :
+      (<CourseForm
         course={course}
         authors={authors}
         errors={errors}
         onChange={handleChange}
         onSave={handleSave}
+        saving={saving}
       />
+      )}
     </>
   );
 }
