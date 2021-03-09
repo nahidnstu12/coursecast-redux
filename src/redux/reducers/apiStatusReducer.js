@@ -7,7 +7,7 @@ export default function apiCallStatusReducer(
 ) {
   if (action.type === actionTypes.API_STATUS_BEGIN) {
     return state + 1;
-  } else if (actionTypeEndsInSuccess(action.type)) {
+  } else if (actionTypeEndsInSuccess(action.type) || action.type === actionTypes.API_CALL_ERROR) {
     return state - 1;
   }
 
@@ -18,4 +18,4 @@ function actionTypeEndsInSuccess(type) {
   return type.substring(type.length - 8) === "_SUCCESS";
 }
 
-actionTypeEndsInSuccess(actionTypes.LOAD_AUTHORS)
+// actionTypeEndsInSuccess(actionTypes.LOAD_AUTHORS)
