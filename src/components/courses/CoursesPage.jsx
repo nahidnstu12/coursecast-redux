@@ -1,10 +1,9 @@
 import React from "react";
 import CoursesList from "./CoursesList.jsx";
-import * as courseActions from "../../redux/actions/courseActions";
-import * as authorActions from "../../redux/actions/authorActions";
+import { loadCourse, deleteCourse } from "../../redux/actions/courseActions";
+import { loadAuthors } from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import { Redirect } from "react-router-dom";
 import Spinner from "../common/Spinner";
 import { toast } from "react-toastify";
@@ -15,32 +14,32 @@ class CoursesPage extends React.Component {
   };
 
   componentDidMount() {
-    const { actions, authors, courses } = this.props;
+    const {  authors, courses } = this.props;
     if (courses.length === 0) {
-      actions.loadCourse().catch((err) => {
+      this.props.loadCourse().catch((err) => {
         alert("Loading Course is failed " + err);
       });
     }
     if (authors.length === 0) {
-      actions.loadAuthor().catch((err) => {
+      this.props.loadAuthors().catch((err) => {
         alert("Loading Authores is failed " + err);
       });
     }
   }
-  handleChange = (event) => {
-    const course = { ...this.state.course, title: event.target.value };
-    this.setState({ course });
-  };
+  // handleChange = (event) => {
+  //   const course = { ...this.state.course, title: event.target.value };
+  //   this.setState({ course });
+  // };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    this.props.actions.createCourse(this.state.course);
-  };
+  // handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   this.props.actions.createCourse(this.state.course);
+  // };
 
   handleDelete =async (course) => {
     toast.success("Course Delete Successfully")
     try{
-      await this.props.actions.deleteCourse(course)
+      await this.props.deleteCourse(course)
 
     }
     catch(err){
@@ -83,15 +82,17 @@ class CoursesPage extends React.Component {
 CoursesPage.propTypes = {
   courses: PropTypes.array.isRequired,
   authors: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired,
   loading: PropTypes.number.isRequired,
+  loadAuthors: PropTypes.func.isRequired,
+  loadCourse: PropTypes.func.isRequired,
+  deleteCourse: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
   return {
     courses:
       state.authors.length === 0
-        ? []
+        ? [] 
         : state.courses.map((course) => {
           return {
             ...course,
@@ -104,14 +105,10 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: {
-      loadCourse: bindActionCreators(courseActions.loadCourse, dispatch),
-      loadAuthor: bindActionCreators(authorActions.loadAuthors, dispatch),
-      deleteCourse: bindActionCreators(courseActions.deleteCourse,dispatch)
-    },
-  };
+const mapDispatchToProps = {
+  loadAuthors,
+  loadCourse,
+  deleteCourse
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
